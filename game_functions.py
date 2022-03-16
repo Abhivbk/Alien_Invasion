@@ -3,6 +3,7 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 
+
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
     """Respond to keypresses."""
     if event.key == pygame.K_RIGHT:
@@ -12,7 +13,7 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
     elif event.key == pygame.K_SPACE:
         if len(bullets) < ai_settings.bullets_allowed:
             fire_bullet(ai_settings, screen, ship, bullets)
-    elif event.key == pygame.K_q:
+    elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
         sys.exit()
 
 
@@ -72,13 +73,18 @@ def create_fleet(ai_settings, screen, aliens):
     alien = Alien(ai_settings, screen)
     alien_width = alien.rect.width
 
-    available_space_x = ai_settings.screen_width - 2 * alien_width
-    number_aliens_x = int(available_space_x / (2 * alien_width))
+    ''' We leave margins on both side of screens.
+        To 🔍Find The available space for aliens we subtract the Screen width by 2 times alien_width '''
+    available_space_x = ai_settings.screen_width - (2 * alien_width)
+
+    ''' We divide the available space with alien_width to find the number of aliens '''
+    number_aliens_x = int(available_space_x / alien_width)
 
     # Create the first row of aliens.
     for alien_number in range(number_aliens_x):
         # Create an alien and place it in the row.
         alien = Alien(ai_settings, screen)
-        alien.x = alien_width + 2 * alien_width * alien_number
+        # We keep shifting the alien towards the right with leaving some space between
+        alien.x = alien_width + (2 * alien_width * alien_number)
         alien.rect.x = alien.x
         aliens.add(alien)
