@@ -37,7 +37,5 @@ def run_game():
 
         ship.blitme()
 
-        pygame.display.flip()
-
 
 run_game()
