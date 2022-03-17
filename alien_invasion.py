@@ -35,6 +35,7 @@ def run_game():
         ''' Position of bullets is changed (only numerically), Delete the existing bullets which ran out of screen(To 
         save Memory) '''
         gf.update_bullets(bullets)
+        gf.update_aliens(ai_settings, aliens)
 
         ''' Finally, 🤗  we draw the bullets and ships on the screen '''
         gf.update_screen(ai_settings, screen, ship, aliens, bullets)
