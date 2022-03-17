@@ -76,7 +76,7 @@ def get_number_aliens_x(ai_settings, alien_width):
     available_space_x = ai_settings.screen_width - (2 * alien_width)
 
     ''' We divide the available space with alien_width to find the number of aliens '''
-    number_aliens_x = int(round(available_space_x / (2 * alien_width)))
+    number_aliens_x = int(available_space_x / (2 * alien_width))
     return number_aliens_x
 
 
