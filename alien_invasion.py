@@ -16,14 +16,13 @@ def run_game():
     # Initialising some things...
     ai_settings = Settings(screen)
     ship = Ship(ai_settings, screen)
-    alien = Alien(ai_settings, screen)
 
     # Make a groups to store bullets and aliens in it.
     bullets = Group()
     aliens = Group()
 
     # Create the fleet of aliens.
-    gf.create_fleet(ai_settings, screen, aliens)
+    gf.create_fleet(ai_settings, screen, aliens, ship)
 
     while True:
         ''' First we check for keyboard inputs...'''

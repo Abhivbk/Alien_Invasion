@@ -5,7 +5,7 @@ class Settings:
 
         # Screen settings
         self.screen = screen
-        self.screen_height, self.screen_width = self.screen.get_size()
+        self.screen_width, self.screen_height = self.screen.get_size()
         self.bg_color = (44, 42, 74)
 
         # Ship settings
