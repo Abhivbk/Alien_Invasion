@@ -3,19 +3,33 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 
-
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
-    """Respond to keypresses."""
-    if event.key == pygame.K_RIGHT:
+    """Respond to key presses."""
+
+    if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
         ship.moving_right = True
-    elif event.key == pygame.K_LEFT:
+
+    elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
         ship.moving_left = True
+
     elif event.key == pygame.K_SPACE:
         if len(bullets) < ai_settings.bullets_allowed:
             fire_bullet(ai_settings, screen, ship, bullets)
+
     elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
         sys.exit()
 
+def check_keyup_events(event, ship):
+    """Respond to key releases."""
+    if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+        ship.moving_right = False
+    elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+        ship.moving_left = False
+
+def mouse_button_down(ai_settings, screen, ship, bullets):
+    mouse_presses = pygame.mouse.get_pressed()
+    if mouse_presses[0]:
+        fire_bullet(ai_settings, screen, ship, bullets)
 
 def fire_bullet(ai_settings, screen, ship, bullets):
     """Fire a bullet if limit not reached yet."""
@@ -25,21 +39,18 @@ def fire_bullet(ai_settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 
-def check_keyup_events(event, ship):
-    """Respond to key releases."""
-    if event.key == pygame.K_RIGHT:
-        ship.moving_right = False
-    elif event.key == pygame.K_LEFT:
-        ship.moving_left = False
-
-
 def check_events(ai_settings, screen, ship, bullets):
     """Respond to keypresses and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+
         elif event.type == pygame.KEYDOWN:
             check_keydown_events(event, ai_settings, screen, ship, bullets)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_button_down(ai_settings, screen, ship, bullets)
+
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
@@ -54,7 +65,7 @@ def update_screen(ai_settings, screen, ship, alien, bullets):
     pygame.display.flip()
 
 
-def update_bullets(bullets):
+def update_bullets(aliens, bullets):
     """Update position of bullets and get rid of old bullets."""
     # Update bullet positions.
     bullets.update()
@@ -64,6 +75,10 @@ def update_bullets(bullets):
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
     # print(len(bullets))
+
+    # Check for any bullets that have hit aliens.
+    # If so, get rid of the bullet and the alien.
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 
 ''' ALIEN FUNCTIONS 👇'''

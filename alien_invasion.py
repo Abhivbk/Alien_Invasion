@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from settings import Settings
 from ship import Ship
@@ -34,7 +36,7 @@ def run_game():
 
         ''' Position of bullets is changed (only numerically), Delete the existing bullets which ran out of screen(To 
         save Memory) '''
-        gf.update_bullets(bullets)
+        gf.update_bullets(aliens, bullets)
         gf.update_aliens(ai_settings, aliens)
 
         ''' Finally, 🤗  we draw the bullets and ships on the screen '''
