@@ -44,7 +44,7 @@ def fire_bullet(ai_settings, screen, ship, bullets):
 
 
 def check_events(ai_settings, screen, ship, bullets):
-    """Respond to keypresses and mouse events."""
+    """Respond to key presses and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -59,7 +59,7 @@ def check_events(ai_settings, screen, ship, bullets):
             check_keyup_events(event, ship)
 
 
-def update_screen(ai_settings, screen, ship, alien, bullets):
+def update_screen(screen, ship, alien, bullets):
     # Redraw all bullets behind ship and aliens.
     for bullet in bullets.sprites():
         bullet.draw_bullet()
@@ -128,7 +128,7 @@ def create_alien(ai_settings, screen, aliens, alien_number, row_number):
 
     # We keep shifting the alien towards the right with leaving some space between
     alien.x = alien_width + (2 * alien_width * alien_number)
-    alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+    alien.rect.y = alien_height + 2 * alien_height * row_number
 
     aliens.add(alien)
 
