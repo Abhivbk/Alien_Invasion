@@ -3,6 +3,7 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 
+
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
     """Respond to key presses."""
 
@@ -19,6 +20,7 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
     elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
         sys.exit()
 
+
 def check_keyup_events(event, ship):
     """Respond to key releases."""
     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -26,10 +28,12 @@ def check_keyup_events(event, ship):
     elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
         ship.moving_left = False
 
+
 def mouse_button_down(ai_settings, screen, ship, bullets):
     mouse_presses = pygame.mouse.get_pressed()
     if mouse_presses[0]:
         fire_bullet(ai_settings, screen, ship, bullets)
+
 
 def fire_bullet(ai_settings, screen, ship, bullets):
     """Fire a bullet if limit not reached yet."""
@@ -65,7 +69,7 @@ def update_screen(ai_settings, screen, ship, alien, bullets):
     pygame.display.flip()
 
 
-def update_bullets(aliens, bullets):
+def update_bullets(ai_settings, screen, ship, aliens, bullets):
     """Update position of bullets and get rid of old bullets."""
     # Update bullet positions.
     bullets.update()
@@ -75,13 +79,24 @@ def update_bullets(aliens, bullets):
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
     # print(len(bullets))
+    check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets)
 
+def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
     # Check for any bullets that have hit aliens.
     # If so, get rid of the bullet and the alien.
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
+    # Repopulating the Alien Fleet
+    if len(aliens) == 0:
+        # Increasing the Alien Movement Height
+        ai_settings.alien_speed_factor += 0.5
+        # Destroying the other bullets
+        bullets.empty()
+        create_fleet(ai_settings, screen, aliens, ship)
+
 
 ''' ALIEN FUNCTIONS 👇'''
+
 
 def get_number_aliens_x(ai_settings, alien_width):
     """Determine the number of aliens that fit in a row."""
@@ -107,14 +122,12 @@ def create_alien(ai_settings, screen, aliens, alien_number, row_number):
     # Create an alien and find the number of aliens in a row.
     # Spacing between each alien is equal to one alien width.
     alien = Alien(ai_settings, screen)
-    alien_width = alien.rect.width
 
-    # Create an alien and place it in the row.
-    alien = Alien(ai_settings, screen)
+    alien_width = alien.rect.width
+    alien_height = alien.rect.height
+
     # We keep shifting the alien towards the right with leaving some space between
     alien.x = alien_width + (2 * alien_width * alien_number)
-
-    alien.rect.x = alien.x
     alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
 
     aliens.add(alien)
@@ -123,12 +136,14 @@ def create_alien(ai_settings, screen, aliens, alien_number, row_number):
 def create_fleet(ai_settings, screen, aliens, ship):
     # Create the first row of aliens.
     alien = Alien(ai_settings, screen)
+
     number_aliens_x = get_number_aliens_x(ai_settings, alien.rect.width)
     number_rows = get_number_rows(ai_settings, ship.rect.height, alien.rect.height)
 
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
             create_alien(ai_settings, screen, aliens, alien_number, row_number)
+
 
 def check_fleet_edges(ai_settings, aliens):
     """ Respond Appropriately if any aliens reach the edge """
@@ -137,11 +152,13 @@ def check_fleet_edges(ai_settings, aliens):
             change_fleet_direction(ai_settings, aliens)
             break
 
+
 def change_fleet_direction(ai_settings, aliens):
     """ Drop the entire fleet and Change its Direction"""
     for alien in aliens.sprites():
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
+
 
 def update_aliens(ai_settings, aliens):
     """ Check if the fleet is at an edge, and then update the positions of all aliens in the fleet. """

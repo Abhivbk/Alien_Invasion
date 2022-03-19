@@ -1,16 +1,12 @@
-import time
-
 import pygame
 from settings import Settings
 from ship import Ship
 import game_functions as gf
 from pygame.sprite import Group
-from alien import Alien
 
 
 def run_game():
     pygame.init()
-    bg_color = (44, 42, 74)
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption("Alien Invasion")
@@ -36,7 +32,7 @@ def run_game():
 
         ''' Position of bullets is changed (only numerically), Delete the existing bullets which ran out of screen(To 
         save Memory) '''
-        gf.update_bullets(aliens, bullets)
+        gf.update_bullets(ai_settings, screen, ship, aliens, bullets)
         gf.update_aliens(ai_settings, aliens)
 
         ''' Finally, 🤗  we draw the bullets and ships on the screen '''
